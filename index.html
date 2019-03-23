@@ -114,12 +114,11 @@ Need to detect the index of each letter. When a character match is performed on 
         }
         
     
+        // Function to generate a new word from the word bank
         function generate_word() {
             word = [];
             word = word_bank[Math.floor(Math.random() * word_bank.length)];
         }
-
-
 
 
         // Function to parse the string into an array
@@ -136,37 +135,43 @@ Need to detect the index of each letter. When a character match is performed on 
             console.log(current_word);
         }
 
+        // Function to check for letters that the user has already input and give the user another try
         function check_dup(userGuess) {
             var dup_test = 0
-            for(var i = 0; i < current_word; i++) {
+            for(var i = 0; i < letters_guessed.length; i++) {
                 if (userGuess == letters_guessed[i]) {
-                    alert("you already guessed that letter, please try another");
+                    dup_test += 1;
                 }
-                else {
-                    guess(userGuess)
+            }
+            return dup_test !== 0;
+        }
+
+        // Logic for when a user makes a guess attempt
+        function guess(userGuess) {
+
+            if (check_dup(userGuess)) {
+                    alert("You already guessed that letter, please try another");
                 }
+            else {
+                for(var i = 0; i < answer_arr.length; i++) {
+                    if(userGuess == answer_arr[i]) {
+                        current_word[i] = userGuess;
+                        console.log(current_word == answer);
+                        console.log(current_word);
+                    }
+                }
+                letters_guessed[letters_guessed.length] = userGuess;
+                guessed.textContent = letters_guessed;
+                
+                guesses_remaining -= 1;
+                remaining_guesses.textContent = guesses_remaining;
+
+                incomplete_word.textContent = current_word;
+                end_game_conditions();
             }
         }
 
-        function guess(userGuess) {
-            
-            for(var i = 0; i < answer_arr.length; i++) {
-                if(userGuess == answer_arr[i]) {
-                    current_word[i] = userGuess;
-                    console.log(current_word == answer);
-                    console.log(current_word);
-                }
-            } 
-            letters_guessed[letters_guessed.length] = userGuess;
-            guessed.textContent = letters_guessed;
-            
-            guesses_remaining -= 1;
-            remaining_guesses.textContent = guesses_remaining;
-
-            incomplete_word.textContent = current_word;
-            end_game_conditions();
-        }
-        
+        // checks for win / lose condition, and then takes action
         function end_game_conditions() {
             if(same_arr(current_word, answer_arr)) {
                 alert("You won! Here's another word");
@@ -180,6 +185,7 @@ Need to detect the index of each letter. When a character match is performed on 
             }
         }
 
+        // resets if win / lose condition met
         function reset() {
             guesses_remaining = guesses_total
             remaining_guesses.textContent = guesses_remaining;
@@ -194,7 +200,7 @@ Need to detect the index of each letter. When a character match is performed on 
             incomplete_word.textContent = current_word;
         }
 
-
+        // checks if two arrays are the same array
         function same_arr(current_word, answer_arr) {
             var compare_count = 0
             for(var i = 0; i < current_word.length; i++) {
